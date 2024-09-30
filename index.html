@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<!--Programa: Quadrado se movimentando
+Nome: Ana Clara - Nº: 1 - Turma: 2B.
+Nome: Davi Martins - Nº: 03.
+Nome: Maria Eduarda - Nº: 23.
+Nome: Willian Araujo - Nº: 35.
+DESCRIÇÃO: Este programa mostra a movimentação de um quadrado no canvas-->
+<head>
+    <title>Quadrado se Movendo</title>
+    <meta charset="UTF-8">
+    <style>
+        canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #A0A0A0;
+        }
+        .button-container {
+            margin: 10px;
+        }
+    <style>
+        canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #A0A0A0;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+        }
+        .button-row {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    <script type="text/javascript">
+        var quadrado;
+        var speed = 2;
+
+        function startGame() {
+            quadrado = new component(25, "red", 200, 135);
+            myGameArea.start();
+        }
+
+        var myGameArea = {
+            canvas: document.createElement("canvas"),
+            start: function() {
+                this.canvas.width = 480;
+                this.canvas.height = 270;
+                this.context = this.canvas.getContext("2d");
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.update();
+            },
+            clear: function() {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            update: function() {
+                this.clear();
+                quadrado.update();
+            }
+        }
+
+        function component(size, color, x, y) {
+            this.size = size;
+            this.color = color;
+            this.x = x;
+            this.y = y;
+            this.update = function() {
+                var ctx = myGameArea.context;
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            };
+        }
+
+        function move(direction) {
+            let targetX = quadrado.x;
+            let targetY = quadrado.y;
+
+            switch (direction) {
+                case 'up':
+                    targetY -= 10;
+                    break;
+                case 'down':
+                    targetY += 10;
+                    break;
+                case 'left':
+                    targetX -= 10;
+                    break;
+                case 'right':
+                    targetX += 10;
+                    break;
+            }
+
+            slideTo(targetX, targetY);
+        }
+
+        function slideTo(targetX, targetY) {
+            const interval = setInterval(() => {
+                if (quadrado.x < targetX) quadrado.x += speed;
+                if (quadrado.x > targetX) quadrado.x -= speed;
+                if (quadrado.y < targetY) quadrado.y += speed;
+                if (quadrado.y > targetY) quadrado.y -= speed;
+
+                myGameArea.update();
+
+                if (quadrado.x === targetX && quadrado.y === targetY) {
+                    clearInterval(interval);
+                }
+            }, 10);
+        }
+
+        function startMoving(direction) {
+            interval = setInterval(() => move(direction), 20);  // Insiro paramentro movimento e valor de em milisegundos para reativar a função
+        }
+
+        function stopMoving() {
+            clearInterval(interval);
+        }
+    </script>
+</head>
+<body onload="startGame();">
+    <div class="button-container">
+        <div class="button-row">
+            <button onmousedown="startMoving('up')" onmouseup="stopMoving()">Up</button> 
+        </div>
+        <div class="button-row">
+            <button onmousedown="startMoving('left')" onmouseup="stopMoving()">Left</button>
+            <button onmousedown="startMoving('right')" onmouseup="stopMoving()">Right</button>
+        </div>
+        <div class="button-row">
+            <button onmousedown="startMoving('down')" onmouseup="stopMoving()">Down</button>
+        </div>
+    </div>
+</body>
+</html>
